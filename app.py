@@ -1,7 +1,7 @@
-from pytube import YouTube
-from sys import argv
+from pytubefix import YouTube
 
-link = argv[1]
-yt = YouTube(link)
 
-print(f"Title {yt.title}")
+yt = YouTube('https://youtu.be/dQw4w9WgXcQ?si=dKMIypGK_maFXuG5')
+
+print(yt.title)
+#yt.streams.get_highest_resolution().download()
