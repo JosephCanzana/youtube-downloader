@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    index
+{% endblock %}
+
+{% block main %}
+
+    <div class="center-container" style="background-color: beige;">
+        <form action="/" method="post" ">
+            <input type="text" id="name" name="url" placeholder="URL" required>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+
+{% endblock %}
