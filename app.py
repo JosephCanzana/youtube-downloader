@@ -10,13 +10,13 @@ def index():
         try:
             yt = YouTube(url)
             title = yt.title
-            #yt.streams.get_highest_resolution().download(output_path='./downloads')
+            yt.streams.get_highest_resolution().download(output_path='./downloads')
         except:
-            return apology("Invalid", 400)   
+            return apology("Invalid URL", 400)   
 
         return render_template("success.html", title=title)
     else:
-        return render_template("index.html") 
+        return render_template("index.html")
     
 def apology(message, code):
     return render_template("apology.html", message=message, code=code)

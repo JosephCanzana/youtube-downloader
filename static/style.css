@@ -1,5 +1,19 @@
+body{
+    background-color: black;
+}
+
 /* Styling for the h1 title at the top */
 .page-title {
+    width: 100%;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+    margin: 0;
+    font-size: 4rem;
+}
+
+.sub-title {
     width: 100%;
     background-color: #333;
     color: #fff;
@@ -9,14 +23,30 @@
     font-size: 2rem;
 }
 
-/* Centering container */
+.box {
+    border: 2px solid rgb(47, 54, 50);
+    padding: 20px;                 
+    text-align: center;            
+    border-radius: 8px;            
+    max-width: 600px;              
+    margin: 20px auto;             
+       
+}
+
+
+
 .center-container {
     display: flex;
     flex-direction: column;
-    align-items: center;       /* Centers content horizontally */
-    justify-content: center;    /* Centers content vertically */
-    min-height: calc(100vh - 80px); /* Adjusts for the title's height */
-    margin-top: 20px;           /* Adds space below the title */
+    align-items: center;            
+    justify-content: flex-start;     
+    min-height: calc(100vh - 100px); 
+    margin-top: 40px;
+    padding-top: 20px;
+    font-family: 'Montserrat', sans-serif;  
+    background-image: url('background.jpg');
+    background-size: cover; 
+    background-position: center;
 }
 
 /* Basic styling for form and additional content */
