@@ -1,2 +1,3 @@
-pytubefix
-flask
+Flask==3.0.3
+pytubefix==8.3.2
+gunicorn==23.0.0
