@@ -1,42 +1,43 @@
 html, body {
-    overflow: hidden;
-    height: 100%;     
+    height: 100%;  /* Ensure the entire height is used */
+    margin: 0;
+    padding: 0;
+    overflow: hidden;  /* Disable scrolling */
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-  }
-  
-  body {
+}
+
+body {
+    background-image: url('background.jpg');
+    background-size: cover;
+    background-position: center;
+    font-family: Tahoma, Geneva, sans-serif;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
-    font-family: Arial, sans-serif;
-    background-color: black;
-  }
-  
-  main {
+}
+
+main {
     flex: 1;
-  }
-  
-  .footer {
+    overflow: hidden; 
+}
+
+.footer {
     background-color: #333;
     color: #fff;
     text-align: center;
     padding: 15px 0;
     font-size: 14px;
     width: 100%;
-    position: relative;
-    bottom: 0;
-    left: 0;
-    position: absolute;
-  }
-  
-  .footer p {
+    margin-top: auto;
+}
+
+.footer p {
     margin: 5px 0;
-  }
+}
 
 .page-title {
     width: 100%;
@@ -45,7 +46,7 @@ html, body {
     text-align: center;
     padding: 10px 0;
     margin: 0;
-    font-size: 3rem;
+    font-size: 4rem;
 }
 
 .sub-title {
@@ -57,29 +58,41 @@ html, body {
     font-size: 2rem;
 }
 
-.box {
-    border: 2px solid rgb(47, 54, 50);
-    padding: 20px;                 
-    text-align: center;            
-    border-radius: 8px;            
-    max-width: 600px;              
-    margin: 20px auto;             
-       
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-title {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 320px) {
+    .page-title {
+        font-size: 1.5rem; 
+    }
 }
 
 .center-container {
     display: flex;
     flex-direction: column;
-    align-items: center;            
-    justify-content: flex-start;     
-    min-height: calc(100vh - 100px); 
-    margin-top: 40px;
-    padding-top: 20px;
-    font-family: 'Montserrat', sans-serif;  
-    background-image: url('background.jpg');
-    background-size: cover; 
-    background-position: center;
-    overflow: hidden; 
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 100px);
+    padding: 20px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.box {
+    border: 2px solid rgb(47, 54, 50);
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    max-width: 800px;
+    margin: 15px auto;
 }
 
 form, .additional-content {
@@ -93,4 +106,33 @@ input, button {
     width: 100%;
     padding: 10px;
     margin: 10px 0;
+}
+
+
+.toast {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    border-radius: 8px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%; 
+    top: 70%; 
+    transform: translate(-50%, -50%); 
+    font-size: 17px;
+}
+
+.toast.show {
+    visibility: visible;
+    animation: fadeInOut 3s;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
 }
