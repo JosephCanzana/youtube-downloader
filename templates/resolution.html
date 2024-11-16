@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Choose a Resolution
+{% endblock %}
+
+{% block main %}
+    <div class="center-container index">
+        <form id="resolutionForm" action="/resolution" method="post">
+            <h2 style="font-weight: 550;">{{ title }}</h2>
+            <label for="resolution" style="font-size: 18px; font-weight: 560;">Choose a resolution:</label>
+            <select id="resolution" name="stream_itag" style="font-size: 16px; padding: 5px;">
+                {% for stream in streams %}
+                    <option value="{{ stream.itag }}">
+                        {{ stream.resolution }} - {{ stream.mime_type }}
+                    </option>
+                {% endfor %}
+            </select>
+            <button type="submit" style="background-color: rgb(149, 175, 222);">Download Selected Stream</button>
+        </form>
+        <a href="/" class="box" style="background-color: rgb(149, 175, 222); color: black; font-size: small;">Return</a>
+    </div>
+
+     <!-- Toast Notification -->
+    <div id="toast" class="toast">Please wait...</div>
+    <div id="successToast" class="toast success-toast">Download successful!</div>
+
+    <script>
+        // Show the "please wait" notification and submit the form using AJAX
+        document.getElementById("resolutionForm").addEventListener("submit", function(event) {
+            event.preventDefault();  // Prevent the default form submission
+
+            // Show the "please wait" toast notification immediately
+            const waitToast = document.getElementById("toast");
+            waitToast.classList.add("show");
+
+            // Hide the "please wait" toast after 2 seconds (adjust this based on processing time)
+            setTimeout(function() {
+                waitToast.classList.remove("show");
+            }, 2000);
+
+            // Prepare form data to send via AJAX
+            const formData = new FormData(event.target);
+            fetch(event.target.action, {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.blob())  // Expect the response to be a file
+            .then(blob => {
+                // Create a temporary link to download the file
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = '{{ title }}.mp4';  // Set the download filename
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+
+                // After download, show the success notification
+                const successToast = document.getElementById("successToast");
+                successToast.classList.add("show");
+
+                // Hide the success toast after 3 seconds
+                setTimeout(function() {
+                    successToast.classList.remove("show");
+                }, 3000);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+
+{% endblock %}
