@@ -57,7 +57,7 @@ def resolution():
         if stream:
 
             # Create temporary file holder (server side)
-            download_folder = "./downloads"
+            download_folder = "/tmp/downloads"
             os.makedirs(download_folder, exist_ok=True)
           
             # Download the file and send to the temporary folder          
