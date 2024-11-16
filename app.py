@@ -39,7 +39,7 @@ def index():
 
         except Exception as e:
             print(f"Error occurred: {e}")
-            return apology(f"An error occurred{yt.title}", 400)
+            return apology("An error occurred", 400)
     else:
         return render_template("index.html")
 
