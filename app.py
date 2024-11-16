@@ -37,8 +37,9 @@ def index():
 
             return render_template("resolution.html", title=yt.title ,streams=streams)
 
-        except:
-            return apology("Invalid URL", 400)
+        except Exception as e:
+            print(f"Error occurred: {e}")
+            return apology(f"An error occurred{yt.title}", 400)
     else:
         return render_template("index.html")
 
