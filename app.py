@@ -14,9 +14,46 @@ def index():
 
     if request.method == "POST":
 
-        return redirect("resolution.html")
+        #looking for the cookie if it exist
+        if 'used' not in session:
+            session['used'] = False
+
+        url = request.form.get("url")
+
+        # Error handling
+        try:
+            yt = YouTube(url, use_po_token=True)
+            
+            # Storing url to the session
+            session["video_url"] = url
+        
+            # Storing non duplicates streams
+            initial_streams = yt.streams
+            streams = []
+            seen_resolutions = set() 
+            for stream in initial_streams:
+                if stream.mime_type == "video/mp4" and stream.resolution not in seen_resolutions:
+                    streams.append(stream)
+                    seen_resolutions.add(stream.resolution)
+
+            # Storing the streams and title in session (or other method)
+            session["streams"] = streams
+            session["video_title"] = yt.title
+
+            # Redirect to a route that handles resolution selection
+            return redirect(url_for("select_resolution"))
+
+        except Exception as e:
+            print(f"Error occurred: {e}")
+            return apology(f"An error occurred: {str(e)}", 400)
     else:
         return render_template("index.html")
+    
+@app.route("/select-resolution")
+def select_resolution():
+    streams = session.get("streams", [])
+    video_title = session.get("video_title", "Untitled Video")
+    return render_template("resolution.html", title=video_title, streams=streams)
 
 @app.route("/resolution", methods=["GET", "POST"])
 def resolution():
