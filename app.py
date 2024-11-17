@@ -48,44 +48,49 @@ def index():
 
 @app.route("/resolution", methods=["GET", "POST"])
 def resolution():
+    # Getting the session url
+    # Ensure the video URL exists in the session
     if "video_url" not in session:
-        return apology("No video URL found in session. Please start over.", 400)
+        return redirect("/")
     
-    try:
-        yt = YouTube(session["video_url"], use_po_token=True)
-    except Exception as e:
-        app.logger.error(f"Error initializing YouTube object: {e}")
-        return apology("Failed to process the video.", 400)
+    yt = YouTube(session["video_url"])
 
     if request.method == "POST":
+
+        # Preparing itag for resolution
         resolution = request.form.get("stream_itag")
-        app.logger.debug(f"Selected itag: {resolution}")
+        stream = yt.streams.get_by_itag(resolution)
 
-        try:
-            stream = yt.streams.get_by_itag(resolution)
-            if not stream:
-                raise ValueError("Stream not found for the provided itag")
+        # If stream has no error
+        if stream:
 
+            # Create temporary file holder (server side)
             download_folder = os.path.join(os.getcwd(), "downloads")
             os.makedirs(download_folder, exist_ok=True)
+          
+            # Download the file and send to the temporary folder         
+            try:
+                stream_path = stream.download(output_path=download_folder)
 
-            stream_path = stream.download(output_path=download_folder)
+                # Schedule file cleanup after response
+                @after_this_request
+                def remove_file(response):
+                    try:
+                        os.remove(stream_path)
+                    except Exception as e:
+                        print(f"Error removing file: {e} line 81")
+                    return response
 
-            @after_this_request
-            def remove_file(response):
-                try:
-                    os.remove(stream_path)
-                except Exception as e:
-                    app.logger.error(f"Error removing file: {e}")
-                return response
-
-            return send_file(stream_path, as_attachment=True, download_name=f"{yt.title}.mp4")
-        except Exception as e:
-            app.logger.error(f"Error during stream retrieval or download: {e}")
-            return apology("Failed to process the download.", 400)
+                # Send file to the client
+                return send_file(stream_path,as_attachment=True,download_name=f"{yt.title}.mp4",)
+            
+            except Exception as e:
+                print(f"Error downloading file: {e}")
+                return apology("Failed to download the video. line 89", 400)
+        else:
+            return apology("Invalid stream selected line 91", 400)
     else:
         return redirect("/")
-
 
 # Apology function
 def apology(message, code=400):
