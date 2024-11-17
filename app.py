@@ -1,7 +1,7 @@
 import os
 
 from pytubefix import YouTube
-from flask import Flask, flash, redirect, render_template, request, send_file,session,after_this_request,url_for
+from flask import Flask, redirect, render_template, request, send_file,session,after_this_request,url_for
 from datetime import timedelta
 
 app = Flask(__name__)
@@ -19,6 +19,8 @@ def index():
             session['used'] = False
 
         url = request.form.get("url")
+        if not url.startswith("https://www.youtube.com/") and not url.startswith("https://youtu.be/"):
+            return apology("Invalid YouTube URL. Please provide a valid link.", 400)
 
         # Error handling
         try:
@@ -39,13 +41,17 @@ def index():
 
         except Exception as e:
             print(f"Error occurred: {e}")
-            return apology("An error occurred", 400)
+            return apology(f"An error occurred: {str(e)}", 400)
     else:
         return render_template("index.html")
 
 @app.route("/resolution", methods=["GET", "POST"])
 def resolution():
     # Getting the session url
+    # Ensure the video URL exists in the session
+    if "video_url" not in session:
+        return redirect("/")
+    
     yt = YouTube(session["video_url"])
 
     if request.method == "POST":
@@ -58,31 +64,36 @@ def resolution():
         if stream:
 
             # Create temporary file holder (server side)
-            download_folder = "/tmp/downloads"
+            download_folder = os.path.join(os.getcwd(), "downloads")
             os.makedirs(download_folder, exist_ok=True)
           
-            # Download the file and send to the temporary folder          
-            stream_path = stream.download(output_path=download_folder)
+            try:
+                # Download the file and send to the temporary folder         
+                stream_path = stream.download(output_path=download_folder)
 
-            # After request to delete the file from the temporary folder
-            @after_this_request
-            def remove_file(response):
-                try:
-                    os.remove(stream_path) 
-                except Exception as e:
-                    print(f"Error removing file: {e}")
-                return response
+                # Schedule file cleanup after response
+                @after_this_request
+                def remove_file(response):
+                    try:
+                        os.remove(stream_path)
+                    except Exception as e:
+                        print(f"Error removing file: {e}")
+                    return response
 
-            # Save file to the client side computer
-            return send_file(stream_path, as_attachment=True,download_name=f"{yt.title}.mp4")
+                # Send file to the client
+                return send_file(stream_path,as_attachment=True,download_name=f"{yt.title}.mp4",)
+            
+            except Exception as e:
+                print(f"Error downloading file: {e}")
+                return apology("Failed to download the video.", 400)
         else:
             return apology("Invalid stream selected", 400)
     else:
         return redirect("/")
 
 # Apology function
-def apology(message, code):
-    return render_template("apology.html", message=message, code=code)
+def apology(message, code=400):
+    return render_template("apology.html", message=message, code=code),code
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
