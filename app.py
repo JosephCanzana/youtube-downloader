@@ -20,7 +20,7 @@ def index():
 
         url = request.form.get("url")
         if not url.startswith("https://www.youtube.com/") and not url.startswith("https://youtu.be/"):
-            return apology("Invalid YouTube URL. Please provide a valid link. line 23", 400)
+            return apology("Invalid YouTube URL. Please provide a valid link.", 400)
 
         # Error handling
         try:
