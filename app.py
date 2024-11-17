@@ -13,7 +13,8 @@ app.permanent_session_lifetime = timedelta(minutes=10)
 def index():
 
     if request.method == "POST":
-        return apology("working", 400)
+
+        return redirect("resolution.html")
     else:
         return render_template("index.html")
 
