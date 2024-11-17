@@ -13,14 +13,7 @@ app.permanent_session_lifetime = timedelta(minutes=10)
 def index():
 
     if request.method == "POST":
-
-        url = request.form.get("url")
-
-        yt = YouTube(url, use_po_token=True)
-        return apology(f"{yt.title}", 400)
-        
-        return render_template("resolution.html", title=yt.title)
-
+        return apology("working", 400)
     else:
         return render_template("index.html")
 
