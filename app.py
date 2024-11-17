@@ -14,13 +14,7 @@ def index():
 
     if request.method == "POST":
 
-        #looking for the cookie if it exist
-        if 'used' not in session:
-            session['used'] = False
-
         url = request.form.get("url")
-        if not url.startswith("https://www.youtube.com/") and not url.startswith("https://youtu.be/"):
-            return apology("Invalid YouTube URL. Please provide a valid link. line 23", 400)
 
         yt = YouTube(url, use_po_token=True)
         return apology(f"{yt.title}", 400)
