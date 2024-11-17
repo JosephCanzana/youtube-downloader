@@ -20,16 +20,12 @@ def index():
 
         url = request.form.get("url")
         if not url.startswith("https://www.youtube.com/") and not url.startswith("https://youtu.be/"):
-            return apology("Invalid YouTube URL. Please provide a valid link.", 400)
+            return apology("Invalid YouTube URL. Please provide a valid link. line 23", 400)
 
-        try:
-            yt = YouTube(url, use_po_token=True)
-        except EOFError:
-            print("Error: No data received. Please try again.")
-            return apology("Failed to retrieve video. Try again later. line 28", 400)
         # Error handling
         try:
-
+            yt = YouTube(url, use_po_token=True)
+            
             # Storing url to the session
             session["video_url"] = url
 
@@ -46,7 +42,7 @@ def index():
 
         except Exception as e:
             print(f"Error occurred: {e}")
-            return apology(f"An error occurred: {str(e)}", 400)
+            return apology(f"An error occurred: {str(e)} line 45", 400)
     else:
         return render_template("index.html")
 
@@ -82,7 +78,7 @@ def resolution():
                     try:
                         os.remove(stream_path)
                     except Exception as e:
-                        print(f"Error removing file: {e}")
+                        print(f"Error removing file: {e} line 81")
                     return response
 
                 # Send file to the client
@@ -90,9 +86,9 @@ def resolution():
             
             except Exception as e:
                 print(f"Error downloading file: {e}")
-                return apology("Failed to download the video.", 400)
+                return apology("Failed to download the video. line 89", 400)
         else:
-            return apology("Invalid stream selected", 400)
+            return apology("Invalid stream selected line 91", 400)
     else:
         return redirect("/")
 
