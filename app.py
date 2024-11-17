@@ -52,7 +52,7 @@ def resolution():
     if "video_url" not in session:
         return redirect("/")
     
-    yt = YouTube(session["video_url"])
+    yt = YouTube(session["video_url"], use_po_token=True)
 
     if request.method == "POST":
 
@@ -67,8 +67,8 @@ def resolution():
             download_folder = os.path.join(os.getcwd(), "downloads")
             os.makedirs(download_folder, exist_ok=True)
           
+            # Download the file and send to the temporary folder         
             try:
-                # Download the file and send to the temporary folder         
                 stream_path = stream.download(output_path=download_folder)
 
                 # Schedule file cleanup after response
