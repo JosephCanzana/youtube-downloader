@@ -22,20 +22,22 @@ def index():
         if not url.startswith("https://www.youtube.com/") and not url.startswith("https://youtu.be/"):
             return apology("Invalid YouTube URL. Please provide a valid link. line 23", 400)
 
-        # Error handling
-        try:
-            yt = YouTube(url, use_po_token=True)
-            
-            # Storing url to the session
-            session["video_url"] = url
+        yt = YouTube(url, use_po_token=True)
+        
+        # Storing url to the session
+        session["video_url"] = url
+    
+        # Storing non duplicates streams
+        initial_streams = yt.streams
+        streams = []
+        seen_resolutions = set() 
+        for stream in initial_streams:
+            if stream.mime_type == "video/mp4" and stream.resolution not in seen_resolutions:
+                streams.append(stream)
+                seen_resolutions.add(stream.resolution)
 
-            return apology(f"{yt.streams}", 400)
+        return render_template("resolution.html", title=yt.title ,streams=streams)
 
-            return render_template("resolution.html", title=yt.title ,streams=streams)
-
-        except Exception as e:
-            print(f"Error occurred: {e}")
-            return apology(f"An error occurred: {str(e)} line 45", 400)
     else:
         return render_template("index.html")
 
