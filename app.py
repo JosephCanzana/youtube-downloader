@@ -22,9 +22,14 @@ def index():
         if not url.startswith("https://www.youtube.com/") and not url.startswith("https://youtu.be/"):
             return apology("Invalid YouTube URL. Please provide a valid link.", 400)
 
-        # Error handling
         try:
             yt = YouTube(url, use_po_token=True)
+        except EOFError:
+            print("Error: No data received. Please try again.")
+            return apology("Failed to retrieve video. Try again later. line 28", 400)
+        # Error handling
+        try:
+
             # Storing url to the session
             session["video_url"] = url
 
