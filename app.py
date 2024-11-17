@@ -33,15 +33,14 @@ def index():
 
             # Storing non duplicates streams
             initial_streams = yt.streams
+            if initial_streams is None:
+                return apology("line 37", 400)
             streams = []
             seen_resolutions = set() 
-            print("38 ", stream) 
             for stream in initial_streams:
                 if stream.mime_type == "video/mp4" and stream.resolution not in seen_resolutions:
                     streams.append(stream)
-                    print("42 ", stream)
                     seen_resolutions.add(stream.resolution)
-                    print("44 ", stream)
 
             return apology(f"{streams}", 400)
 
