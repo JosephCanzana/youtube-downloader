@@ -29,7 +29,9 @@ def index():
             # Storing url to the session
             session["video_url"] = url
 
-            return render_template("resolution.html", title=yt.title ,streams=yt.streams)
+            return apology(f"{yt.streams}", 400)
+
+            return render_template("resolution.html", title=yt.title ,streams=streams)
 
         except Exception as e:
             print(f"Error occurred: {e}")
