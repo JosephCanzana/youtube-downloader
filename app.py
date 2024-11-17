@@ -23,10 +23,8 @@ def index():
             return apology("Invalid YouTube URL. Please provide a valid link. line 23", 400)
 
         yt = YouTube(url, use_po_token=True)
-        stream = yt.streams
         
-        
-        return render_template("resolution.html", title=yt.title ,streams=stream)
+        return render_template("resolution.html", title=yt.title)
 
     else:
         return render_template("index.html")
