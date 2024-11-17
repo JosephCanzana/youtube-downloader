@@ -24,7 +24,7 @@ def index():
 
         # Error handling
         try:
-            yt = YouTube(url)
+            yt = YouTube(url, use_po_token=True)
             # Storing url to the session
             session["video_url"] = url
 
