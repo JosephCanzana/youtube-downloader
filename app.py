@@ -28,23 +28,8 @@ def index():
             
             # Storing url to the session
             session["video_url"] = url
-            if url not in session["video_url"]:
-                return apology("line 32")
 
-            # Storing non duplicates streams
-            initial_streams = yt.streams
-            if initial_streams is None:
-                return apology("line 37", 400)
-            streams = []
-            seen_resolutions = set() 
-            for stream in initial_streams:
-                if stream.mime_type == "video/mp4" and stream.resolution not in seen_resolutions:
-                    streams.append(stream)
-                    seen_resolutions.add(stream.resolution)
-
-            return apology(f"{streams}", 400)
-
-            return render_template("resolution.html", title=yt.title ,streams=streams)
+            return render_template("resolution.html", title=yt.title ,streams=yt.streams)
 
         except Exception as e:
             print(f"Error occurred: {e}")
